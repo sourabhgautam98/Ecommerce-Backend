@@ -5,7 +5,7 @@ const productSchema = new mongoose.Schema({
   description: String,
   price: Number,
   varieties: String,
-  photoUrl: String, // This will store the file path or URL
+  photoUrl: String, 
 }, { timestamps: true });
 
 module.exports = mongoose.model('Product', productSchema);

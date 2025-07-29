@@ -4,28 +4,22 @@ const { uploadToFirebase, deleteFromFirebase } = require('../middleware/upload')
 // ==================== CREATE PRODUCT ====================
 exports.createProduct = async (req, res) => {
   try {
-    const { name, description, price, varieties } = req.body;
+    const { name, description, price, varieties, photoUrl } = req.body;
 
     // Validate required fields
-    if (!name || !description || !price || !varieties) {
+    if (!name || !description || !price|| !varieties || !photoUrl  ) {
       return res.status(400).json({ 
-        error: 'All fields (name, description, price, varieties) are required' 
+        error: 'All fields (name, description, price, varieties, photoUrl) are required' 
       });
     }
 
-    // Upload image to Firebase if exists
-    let imageData = {};
-    if (req.file) {
-      imageData = await uploadToFirebase(req.file);
-    }
 
     const productData = {
       name,
       description,
       price: Number(price),
       varieties,
-      photoUrl: imageData.url || '',
-      imagePath: imageData.filename || ''
+      photoUrl,
     };
 
     const newProduct = await Product.create(productData);
@@ -98,7 +92,7 @@ exports.getProductById = async (req, res) => {
 exports.updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, description, price, varieties } = req.body;
+    const { name, description, price, varieties, photoUrl } = req.body;
 
     // Validate MongoDB ObjectId format
     if (!id.match(/^[0-9a-fA-F]{24}$/)) {
@@ -110,23 +104,14 @@ exports.updateProduct = async (req, res) => {
       return res.status(404).json({ error: 'Product not found' });
     }
 
-    // Upload new image if provided
-    let imageData = {};
-    if (req.file) {
-      // Delete old image if exists
-      if (currentProduct.imagePath) {
-        await deleteFromFirebase(currentProduct.photoUrl);
-      }
-      imageData = await uploadToFirebase(req.file);
-    }
+   
 
     const updateData = {
       name: name || currentProduct.name,
       description: description || currentProduct.description,
       price: price ? Number(price) : currentProduct.price,
       varieties: varieties || currentProduct.varieties,
-      photoUrl: imageData.url || currentProduct.photoUrl,
-      imagePath: imageData.filename || currentProduct.imagePath
+      photoUrl,
     };
 
     const updatedProduct = await Product.findByIdAndUpdate(

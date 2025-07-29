@@ -1,3 +1,4 @@
+const Product = require('../models/Product');
 const { supabase } = require('../config/supabase');
 
 const uploadDocument = async (req, res) => {
@@ -32,6 +33,8 @@ const uploadDocument = async (req, res) => {
     if (!urlData) {
       throw new Error('Failed to generate public URL');
     }
+ console.log('Generated Public URL:', urlData.publicUrl);
+
 
     return res.status(200).json({
       success: true,
