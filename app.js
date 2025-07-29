@@ -14,7 +14,7 @@ const PORT = 3000;
 
 // Middlewares
 app.use(cors());
-app.use(express.json());
+app.use(express.json()); 
 
 
 // Routes
