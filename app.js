@@ -19,6 +19,7 @@ app.use(express.json());
 
 // Routes
 app.use('/api/users', userRoutes);
+console.log("11111111111111111111111111111111")
 app.use('/api/products', productRoutes);
 app.use('/api/upload', uploadRoutes);
 

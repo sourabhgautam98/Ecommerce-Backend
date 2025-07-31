@@ -2,6 +2,8 @@ const jwt = require('jsonwebtoken');
 const JWT_SECRET = 'sourabh_gautam';
 
 const auth = (req, res, next) => {
+  console.log("333333333333333333333333333333")
+
   try {
     const token = req.header('Authorization')?.replace('Bearer ', '');
     if (!token) {

@@ -8,9 +8,10 @@ exports.getUser = async (req, res) => {
   try {
 
     const userDetails = req.user;
+    console.log({userDetails})
     // Find user by ID from token (exclude password)
-    const user = await User.findById(userDetails.userId).select("-password");
-
+    const user = await User.findById(userDetails.id).select("-password");
+console.log({user})
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -32,10 +33,8 @@ exports.getUser = async (req, res) => {
   }
 };
 
-// Alternative middleware-based approach (optional)
 exports.getUserWithMiddleware = async (req, res) => {
   try {
-    // Assuming you have auth middleware that sets req.user
     const user = await User.findById(req.user.userId).select("-password");
 
     if (!user) {
@@ -116,7 +115,7 @@ exports.registerSuperAdmin = async (req, res) => {
       // Generate JWT token
       const token = jwt.sign(
         {
-          userId: admin._id,
+          id: admin._id,
           role: admin.role,
         },
         JWT_SECRET,
@@ -190,7 +189,7 @@ exports.registerUser = async (req, res) => {
       // Generate JWT token
       const token = jwt.sign(
         {
-          userId: user._id,
+          id: user._id,
           role: user.role,
         },
         JWT_SECRET,
@@ -218,7 +217,6 @@ exports.registerUser = async (req, res) => {
   }
 };
 
-// Login user/admin (proper login with token containing _id, name, email, role)
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -245,7 +243,7 @@ exports.login = async (req, res) => {
     // Generate JWT token with user information
     const token = jwt.sign(
       {
-        userId: user._id,
+        id: user._id,
         name: user.name,
         email: user.email,
         role: user.role,
