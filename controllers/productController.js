@@ -194,7 +194,7 @@ exports.productPlaced = async (req, res) => {
     });
   }
 };
-
+//user see product order
 exports.getUserOrders = async (req, res) => {
   try {
     const userId = req.user.id; 
@@ -233,10 +233,10 @@ exports.getUserOrders = async (req, res) => {
   }
 };
 
+
 // admin to see all orders
 exports.getAllOrders = async (req, res) => {
   try {
-   
     if (req.user.role !== 'admin') {
       return res.status(403).json({
         success: false,
@@ -244,40 +244,14 @@ exports.getAllOrders = async (req, res) => {
       });
     }
 
-    // Get all orders with populated user and product data
     const orders = await Order.find()
       .sort({ createdAt: -1 })
-      .populate({
-        path: 'userId',
-        select: 'name email'
-      })
-      .populate({
-        path: 'productId',
-        select: 'name price photoUrl'
-      });
-
-    // Format the response
-    const formattedOrders = orders.map(order => ({
-      _id: order._id,
-      user: {
-        _id: order.userId._id,
-        name: order.userId.name,
-        email: order.userId.email
-      },
-      product: {
-        _id: order.productId._id,
-        name: order.productId.name,
-        price: order.productId.price,
-        photoUrl: order.productId.photoUrl
-      },
-      quantity: order.quantity,
-      createdAt: order.createdAt,
-      updatedAt: order.updatedAt
-    }));
+      .populate('userId', 'name email')
+      .populate('productId', 'name price photoUrl');
 
     res.status(200).json({
       success: true,
-      orders: formattedOrders
+      orders: orders
     });
 
   } catch (error) {

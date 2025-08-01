@@ -15,8 +15,6 @@ console.log({user})
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-
-
     // Send user profile information
     res.json({
       _id: user._id,
