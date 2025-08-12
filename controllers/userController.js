@@ -1,7 +1,8 @@
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const JWT_SECRET = "sourabh_gautam";
+const JWT_SECRET = process.env.JWT_SECRET;
+
 
 // Get User Profile (from token)
 exports.getUser = async (req, res) => {
